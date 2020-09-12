@@ -35,4 +35,8 @@ POST /app/avito-cars/convert_to/https://www.avito.ru/moskva/transport?cd=1/
 {"short_url": "0.0.0.0:8000/avito-cars"}
 ```
 #### GET /app/{short_url}
-redirect на исходный URL
+redirect на исходный URL  
+Пример запроса:
+```
+GET /app/avito-cats
+```
