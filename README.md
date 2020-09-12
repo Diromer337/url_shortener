@@ -6,9 +6,7 @@
 ```docker-compose up```
 Сервис будет работать на http://0.0.0.0:8000/
 ### API
-```
-POST /app/{url}
-```
+#### POST /app/{url}
 Преобразует длинный URL в короткий  
 Пример запроса:
 ```
@@ -25,4 +23,14 @@ POST /app/not_valid_url
 ```
 ```
 {"detail": "Bad URL"}
+```
+#### POST /app/{short_url}/convert_to/{url}
+Задать кастомную ссылку для длинного URL
+Пример запроса:
+```
+POST /app/avito-cars/convert_to/https://www.avito.ru/moskva/transport?cd=1/
+```
+Пример ответа:
+```
+{"short_url": "0.0.0.0:8000/avito-cars"}
 ```
