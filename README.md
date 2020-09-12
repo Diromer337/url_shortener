@@ -25,7 +25,7 @@ POST /app/not_valid_url
 {"detail": "Bad URL"}
 ```
 #### POST /app/{short_url}/convert_to/{url}
-Задать кастомную ссылку для длинного URL
+Задать кастомную ссылку для длинного URL  
 Пример запроса:
 ```
 POST /app/avito-cars/convert_to/https://www.avito.ru/moskva/transport?cd=1/
@@ -34,3 +34,5 @@ POST /app/avito-cars/convert_to/https://www.avito.ru/moskva/transport?cd=1/
 ```
 {"short_url": "0.0.0.0:8000/avito-cars"}
 ```
+#### GET /app/{short_url}
+redirect на исходный URL
