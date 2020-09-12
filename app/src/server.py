@@ -1,4 +1,6 @@
 import re
+import os
+from typing import Optional
 
 import databases
 import sqlalchemy
@@ -7,8 +9,8 @@ from fastapi.responses import RedirectResponse, JSONResponse
 
 from short import Shortener
 
-DATABASE_URL = 'postgresql://postgres:example@db:5432'
-SERVER_URL = '0.0.0.0:8000/'
+DATABASE_URL = os.getenv('DATABASE_URL')
+SERVER_URL = os.getenv('SERVER_URL')
 
 database = databases.Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()
@@ -17,7 +19,7 @@ url_table = sqlalchemy.Table(
     'url',
     metadata,
     sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column('url', sqlalchemy.String),
+    sqlalchemy.Column('url', sqlalchemy.String, index=True),
     sqlalchemy.Column('short_url', sqlalchemy.String, unique=True, index=True)
 )
 
@@ -50,33 +52,32 @@ async def shutdown():
     await database.disconnect()
 
 
-@app.post('/app/{short_url}/convert_to/{url:path}')
-async def generate(url: str, short_url: str, request: Request):
+@app.post('/short')
+async def generate(url: str, short_url: Optional[str] = None):
     if not url_regex.match(url):
         raise HTTPException(status_code=400, detail='Bad URL')
-    short_url = await shortener.assign_url(url, short_url, request)
-    return JSONResponse(
-        content={'short_url': SERVER_URL + short_url}
-    ) if short_url else HTTPException(status_code=400, detail='Short URL is busy')
-
-
-@app.post('/app/{url:path}')
-async def generate(url: str, request: Request):
-    if not url_regex.match(url):
-        raise HTTPException(status_code=400, detail='Bad URL')
-    short_url = await shortener.generate_short_link(url, request)
+    if not url.startswith(('https://', 'http://')):
+        url = 'https://' + url
+    if short_url:
+        await shortener.assign_url(url, short_url)
+    else:
+        short_url = await shortener.generate_short_link(url)
     return JSONResponse(
         content={'short_url': SERVER_URL + short_url}
     )
 
 
-@app.get('/{short_url}')
-async def redirect(short_url: str):
+async def get_url(short_url: str) -> str:
     query = url_table.select().where(
         url_table.c.short_url == short_url
     )
     r = await database.fetch_one(query=query)
-    if r:
-        return RedirectResponse(r['url'], status_code=301)
-    else:
-        return HTTPException(status_code=404, detail='Short URL not found')
+    return r['url'] if r else ''
+
+
+@app.get('/{short_url}')
+async def redirect(short_url: str):
+    url = await get_url(short_url)
+    if url:
+        return RedirectResponse(url, status_code=301)
+    return HTTPException(status_code=404, detail='Short URL not found')

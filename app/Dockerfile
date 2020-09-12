@@ -1,7 +1,8 @@
 FROM python:latest
-COPY ./requirements.txt /app/requirements.txt
+ENV DATABASE_URL postgresql://postgres:example@db:5432
+ENV SERVER_URL 0.0.0.0:8000/
 WORKDIR /app
 RUN pip install --upgrade pip
 RUN pip install -r /app/requirements.txt
-COPY src/. /app
-CMD uvicorn server:app --host 0.0.0.0 --port 8000
+COPY . /app
+ENTRYPOINT ["uvicorn", "server:app", "--host 0.0.0.0", "--port 8000"]
