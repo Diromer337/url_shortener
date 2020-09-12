@@ -50,7 +50,7 @@ async def shutdown():
     await database.disconnect()
 
 
-@app.post('/{url:path}/short_to/{short_url}')
+@app.post('/app/{short_url}/convert_to/{url}')
 async def generate(url: str, short_url: str, request: Request):
     if not url_regex.match(url):
         raise HTTPException(status_code=400, detail='Bad URL')
@@ -60,7 +60,7 @@ async def generate(url: str, short_url: str, request: Request):
     ) if short_url else HTTPException(status_code=400, detail='Short URL is busy')
 
 
-@app.post('/{url:path}')
+@app.post('/app/{url:path}')
 async def generate(url: str, request: Request):
     if not url_regex.match(url):
         raise HTTPException(status_code=400, detail='Bad URL')
