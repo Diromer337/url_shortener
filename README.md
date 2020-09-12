@@ -38,5 +38,5 @@ POST /app/avito-cars/convert_to/https://www.avito.ru/moskva/transport?cd=1/
 redirect на исходный URL  
 Пример запроса:
 ```
-GET /app/avito-cats
+GET /app/avito-cars
 ```
