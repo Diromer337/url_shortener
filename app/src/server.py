@@ -70,7 +70,7 @@ async def generate(url: str, request: Request):
     )
 
 
-@app.get('/app/{short_url}')
+@app.get('/{short_url}')
 async def redirect(short_url: str):
     query = url_table.select().where(
         url_table.c.short_url == short_url
