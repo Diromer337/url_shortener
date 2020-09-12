@@ -50,7 +50,7 @@ async def shutdown():
     await database.disconnect()
 
 
-@app.post('/app/{short_url}/convert_to/{url}')
+@app.post('/app/{short_url}/convert_to/{url:path}')
 async def generate(url: str, short_url: str, request: Request):
     if not url_regex.match(url):
         raise HTTPException(status_code=400, detail='Bad URL')
@@ -70,7 +70,7 @@ async def generate(url: str, request: Request):
     )
 
 
-@app.get('/{short_url}')
+@app.get('/app/{short_url}')
 async def redirect(short_url: str):
     query = url_table.select().where(
         url_table.c.short_url == short_url
