@@ -1,6 +1,6 @@
 # url_shortener
 ## HTTP сервис для сокращения URL на FastAPI + PostgreSQL
-Тестовое задание на позицию стажера-бекендера в юнит Авито Авто.
+Тестовое задание на позицию стажера-бекендера в юнит Авито Авто.  
 Задание: http://bit.ly/avito-auto-be
 ### Запуск
 ```docker-compose up```
@@ -8,4 +8,21 @@
 ### API
 ```
 POST /app/{url}
+```
+Преобразует длинный URL в короткий  
+Пример запроса:
+```
+POST /app/avito.ru/
+```
+Пример ответа:
+```
+{"short_url": "0.0.0.0:8000/y3jdq"}
+```
+Поддерживает разнообразные типы ссылок, в т.ч. https://www.avito.ru/ , https://www.avito.ru/moskva/transport?cd=1  
+Имеется валидация URL
+```
+POST /app/not_valid_url
+```
+```
+{"detail": "Bad URL"}
 ```
