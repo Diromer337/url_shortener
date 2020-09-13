@@ -36,6 +36,13 @@ POST /short?url=https://www.avito.ru/moskva/transport?cd=1&short_url=avito-cars
 ```
 {"short_url": "0.0.0.0:8000/avito-cars"}
 ```
+Ссылку нельзя перезаписать  
+```
+POST /short?url=https://www.avito.ru/&short_url=avito-cars
+```
+```
+{"detail": "Short URL already used"}
+```
 #### GET /{short_url}
 redirect на исходный URL  
 Пример запроса:
