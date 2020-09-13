@@ -57,7 +57,8 @@ async def generate(url: str, short_url: Optional[str] = None):
     if not url.startswith(('https://', 'http://')):
         url = 'https://' + url
     if short_url:
-        await assign_url(url, short_url, database, url_table)
+        if not await assign_url(url, short_url, database, url_table):
+            raise HTTPException(status_code=400, detail='Short URL already used')
     else:
         short_url = await generate_short_link(url, database, url_table)
     return JSONResponse(
@@ -78,4 +79,5 @@ async def redirect(short_url: str):
     url = await get_url(short_url)
     if url:
         return RedirectResponse(url, status_code=301)
-    return HTTPException(status_code=404, detail='Short URL not found')
+    raise HTTPException(status_code=404, detail='Short URL not found')
+

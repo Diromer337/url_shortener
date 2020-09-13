@@ -30,5 +30,5 @@ async def assign_url(url: str, short_url: str, database: Database, url_table: Ta
         query = url_table.insert().values(url=url, short_url=short_url)
         await database.execute(query=query)
     elif r['url'] != url:
-        return ''
-    return short_url
+        return False
+    return True
