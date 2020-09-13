@@ -43,4 +43,5 @@ redirect на исходный URL
 GET /avito-cars
 ```
 ### Нагрузочное тестирование
+https://bit.ly/2ZBdkAx  
 ![test](/images/rps.png)
